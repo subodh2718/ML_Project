@@ -59,4 +59,4 @@ if __name__=="__main__":
 
     modeltrainer = ModelTrainer()
     best_model, r2_square = modeltrainer.initiate_model_trainer(train_arr, test_arr)
-    print(best_model, r2_square)
+    print(best_model, r2_square) 
