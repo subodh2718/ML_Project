@@ -108,23 +108,41 @@
 
 ##logging and exception
 
-import logging
+# import logging
 
-# configure logging
-logging.basicConfig(filename='example.log', level=logging.DEBUG)
+# # configure logging
+# logging.basicConfig(filename='example.log', level=logging.DEBUG)
 
-def divide(x, y):
-    try:
-        result = x / y
-    except ZeroDivisionError as e:
-        # handle the exception by logging it
-        logging.error("Error dividing %s by %s: %s", x, y, e)
-    else:
-        # log the result
-        logging.info("Result of dividing %s by %s: %s", x, y, result)
+# def divide(x, y):
+#     try:
+#         result = x / y
+#     except ZeroDivisionError as e:
+#         # handle the exception by logging it
+#         logging.error("Error dividing %s by %s: %s", x, y, e)
+#     else:
+#         # log the result
+#         logging.info("Result of dividing %s by %s: %s", x, y, result)
+#         return result
+
+# # call the divide function with different arguments
+# divide(4, 2)
+# divide(4, 0)
+# divide("a", 2)
+
+
+##decorator
+
+def log_decorator(func):
+    def wrapper(*args, **kwargs):
+        print("Calling function:", func.__name__)
+        result = func(*args, **kwargs)
+        print("Function returned:", result)
         return result
+    return wrapper
 
-# call the divide function with different arguments
-divide(4, 2)
-divide(4, 0)
-divide("a", 2)
+@log_decorator
+def my_function(x, y):
+    return x + y
+
+my_function(2, 3)
+
