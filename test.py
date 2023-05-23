@@ -132,17 +132,84 @@
 
 ##decorator
 
-def log_decorator(func):
-    def wrapper(*args, **kwargs):
-        print("Calling function:", func.__name__)
-        result = func(*args, **kwargs)
-        print("Function returned:", result)
-        return result
-    return wrapper
+# def log_decorator(func):
+#     def wrapper(*args, **kwargs):
+#         print("Calling function:", func.__name__)
+#         result = func(*args, **kwargs)
+#         print("Function returned:", result)
+#         return result
+#     return wrapper
 
-@log_decorator
-def my_function(x, y):
-    return x + y
+# @log_decorator
+# def my_function(x, y):
+#     return x + y
 
-my_function(2, 3)
+# my_function(2, 3)
+
+# import matplotlib.pyplot as plt
+# import numpy as np
+
+# def spirograph(R, r, d):
+#     t = np.linspace(0, 2 * np.pi, 1000)
+#     x = (R - r) * np.cos(t) + d * np.cos((R - r) * t / r)
+#     y = (R - r) * np.sin(t) - d * np.sin((R - r) * t / r)
+#     return x, y
+
+# R = 5
+# r = 1
+# d = 3
+
+# x, y = spirograph(R, r, d)
+
+# plt.plot(x, y)
+# plt.axis("off")
+# plt.show()
+
+
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+from PIL import Image
+
+def spirograph(R, r, d):
+    t = np.linspace(0, 2 * np.pi, 1000)
+    x = (R - r) * np.cos(t) + d * np.cos((R - r) * t / r)
+    y = (R - r) * np.sin(t) - d * np.sin((R - r) * t / r)
+    return x, y
+
+R = 5
+r = 1
+d = 3
+
+fig, ax = plt.subplots()
+line, = ax.plot([], [], lw=2)
+
+def init():
+    line.set_data([], [])
+    return line,
+
+def update(frame):
+    x, y = spirograph(R, r, d)
+    line.set_data(x[:frame], y[:frame])
+    return line,
+
+animation = FuncAnimation(fig, update, frames=100, init_func=init, blit=True)
+
+# Convert each frame of the animation to an image
+frames = []
+for i in range(100):
+    animation._draw_frame(i)
+    buf = fig.canvas.tostring_rgb()
+    ncols, nrows = fig.canvas.get_width_height()
+    img = Image.frombytes("RGB", (ncols, nrows), buf, "raw", "RGB")
+    frames.append(img)
+
+# Save the frames as a GIF using Pillow
+frames[0].save('spirograph.gif', format='GIF', append_images=frames[1:], save_all=True, duration=100, loop=0)
+
+# Display the GIF in the notebook
+from IPython.display import Image
+Image(filename='spirograph.gif')
 
